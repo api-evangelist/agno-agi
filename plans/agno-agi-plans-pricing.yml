@@ -1,0 +1,130 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Agno
+providerId: agno-agi
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- AI
+- Agents
+- Multi-Agent
+- Open Source
+- Plans
+description: >-
+  Agno's core framework and self-hosted AgentOS runtime are free and open
+  source (pip install agno). Agno the company charges only for the hosted
+  os.agno.com Control Plane that connects to a self-hosted AgentOS instance
+  for chat, tracing, and monitoring - a flat monthly seat/connection
+  subscription (Pro), not usage-metered inference. There is no per-token or
+  per-request fee from Agno itself; agents call whichever LLM providers you
+  configure, and those providers bill you directly.
+notes: >-
+  Verify current Pro/Enterprise terms on the Agno pricing page during
+  reconciliation. "Live connection" refers to a running AgentOS instance
+  connected to the hosted Control Plane for real-time monitoring.
+sources:
+- https://www.agno.com/
+- https://www.agno.com/pricing
+- https://www.agno.com/agentos
+- https://docs.agno.com
+plans:
+- id: agno-free
+  name: Free
+  type: free
+  description: >-
+    The open-source Agno framework and AgentOS runtime, plus the local
+    AgentOS Control Plane for chatting with agents/teams/workflows,
+    monitoring sessions and metrics, and managing knowledge/memory/evals on
+    your own machine.
+  entries:
+  - label: Local Control Plane Access
+    name: free_local_control_plane
+    type: flat
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '0'
+    userMultiplied: false
+  elements:
+  - name: Open Source Framework
+  - name: Self-Hosted AgentOS
+  - name: Local Control Plane
+  - name: Session Monitoring and Metrics
+  - name: Knowledge and Memory Management
+  - name: System Evaluations
+  - name: Community Support
+- id: agno-pro
+  name: Pro
+  type: paid
+  description: >-
+    Hosted Control Plane for a live, running AgentOS instance, with 4 seats
+    and 1 live connection included and unlimited usage, monitoring,
+    retention, knowledge, memories, and chats within that connection.
+  entries:
+  - label: Subscription
+    name: pro_subscription
+    type: flat
+    metric: subscription
+    limit: 1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $150/month
+    userMultiplied: false
+  - label: Additional Seat
+    name: pro_extra_seat
+    type: flat
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $30/month per seat
+    userMultiplied: true
+  - label: Additional Live Connection
+    name: pro_extra_connection
+    type: flat
+    metric: connections
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $95/month per connection
+    userMultiplied: true
+  elements:
+  - name: Hosted Control Plane
+  - name: 1 Live AgentOS Connection Included
+  - name: 4 Seats Included
+  - name: Unlimited Usage, Monitoring, and Retention
+  - name: Unlimited Knowledge and Memories
+- id: agno-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Everything in Pro plus a dedicated Slack channel, dedicated technical
+    lead, support SLA, custom SSO and RBAC, custom agent solutions, and a
+    self-hosted Control Plane option. Contact Agno.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Dedicated Slack Channel
+  - name: Dedicated Technical Lead
+  - name: Support SLA
+  - name: Custom SSO and RBAC
+  - name: Self-Hosted Control Plane Option
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

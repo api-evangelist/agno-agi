@@ -1,0 +1,107 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Agno
+providerId: agno-agi
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- AI
+- Agents
+- Multi-Agent
+- Open Source
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Agno spend. The open-source Agno framework and self-hosted
+  AgentOS runtime carry no Agno license fee - cost in that model is your own
+  compute for running AgentOS plus whatever LLM provider(s) you call from
+  your agents, teams, and workflows. Agno the company's own invoice is a flat
+  monthly subscription for the hosted os.agno.com Control Plane (Pro/
+  Enterprise), priced by seats and live connections rather than by usage,
+  runs, or tokens.
+notes: >-
+  The dominant real-world cost of running Agno is almost always the
+  underlying model provider bill (tokens consumed by agent/team/workflow
+  runs), plus your own infrastructure for AgentOS and its database/vector
+  store - neither of which appears on an Agno invoice. Track those spends in
+  the relevant model provider's and cloud provider's FinOps data separately.
+sources:
+- https://www.agno.com/
+- https://www.agno.com/pricing
+- https://www.agno.com/agentos
+- https://docs.agno.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Agno
+serviceCategory: AI and Machine Learning
+billingModel:
+  pricingCategory: Fixed
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Agno Control Plane
+  ServiceCategory: AI and Machine Learning
+  ProviderName: Agno
+  PublisherName: Agno
+  InvoiceIssuerName: Agno
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Fixed
+meters:
+- name: control_plane_subscription
+  description: Flat monthly Pro subscription fee for the hosted Control Plane (includes 4 seats, 1 live connection).
+  unit: subscriptions
+  aggregation: sum
+  dimensions:
+  - account
+- name: control_plane_seats
+  description: Additional Control Plane seats beyond the 4 included with Pro.
+  unit: seats
+  aggregation: sum
+  dimensions:
+  - account
+- name: control_plane_live_connections
+  description: Additional live AgentOS connections beyond the 1 included with Pro.
+  unit: connections
+  aggregation: sum
+  dimensions:
+  - account
+  - deployment
+- name: self_hosted_compute
+  description: Infrastructure cost of running the self-hosted AgentOS service and its database (no Agno invoice).
+  unit: hours
+  aggregation: sum
+  dimensions:
+  - deployment
+- name: model_provider_spend
+  description: Token/request spend billed directly by whichever LLM provider(s) an agent, team, or workflow is configured to call. Not billed by Agno.
+  unit: tokens
+  aggregation: sum
+  dimensions:
+  - agent
+  - team
+  - workflow
+  - model_provider
+principles:
+- name: Visibility
+  description: Track Control Plane seats/connections on the Agno invoice separately from AgentOS infrastructure costs and downstream model provider token spend.
+- name: Allocation
+  description: Name agents, teams, and workflows per product/team so model provider token spend maps to internal cost centers even though it never appears on Agno's own bill.
+- name: Optimization
+  description: Right-size AgentOS infrastructure (self-hosted), consolidate seats/connections on the Control Plane, and choose cost-appropriate model providers per agent.
+- name: Accountability
+  description: Assign an owner per AgentOS deployment and per Control Plane account; review monthly seat/connection usage against Pro allowances before adding paid add-ons.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

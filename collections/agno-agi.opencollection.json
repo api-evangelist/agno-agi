@@ -1,0 +1,295 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List all agents.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/agents" },
+          "docs": "Lists all agents configured on this AgentOS instance."
+        },
+        {
+          "info": { "name": "Get an agent.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/agents/:agent_id",
+            "params": [
+              { "name": "agent_id", "value": "", "type": "path", "description": "The ID of the agent." }
+            ]
+          },
+          "docs": "Retrieves configuration details for a single agent."
+        },
+        {
+          "info": { "name": "Create an agent run.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/agents/:agent_id/runs",
+            "params": [
+              { "name": "agent_id", "value": "", "type": "path", "description": "The ID of the agent." }
+            ],
+            "body": { "type": "form-urlencoded", "data": "message=Tell+me+about+Agno&stream=true" }
+          },
+          "docs": "Runs an agent with a message. Returns JSON, or a text/event-stream when stream=true."
+        },
+        {
+          "info": { "name": "Cancel a run.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/runs/:run_id/cancel",
+            "params": [
+              { "name": "run_id", "value": "", "type": "path", "description": "The ID of the run to cancel." }
+            ]
+          },
+          "docs": "Requests cancellation of an in-progress run."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Teams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List all teams.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/teams" },
+          "docs": "Retrieves a comprehensive list of all teams configured on this OS instance."
+        },
+        {
+          "info": { "name": "Create a team run.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/teams/:team_id/runs",
+            "params": [
+              { "name": "team_id", "value": "", "type": "path", "description": "The ID of the team." }
+            ],
+            "body": { "type": "form-data", "data": "message=Research+and+summarize+this+topic&stream=true" }
+          },
+          "docs": "Runs a team of agents against a message."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List all workflows.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/workflows" },
+          "docs": "Lists all workflows configured on this AgentOS instance."
+        },
+        {
+          "info": { "name": "Get workflow details.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/workflows/:workflow_id",
+            "params": [
+              { "name": "workflow_id", "value": "", "type": "path", "description": "The ID of the workflow." }
+            ]
+          },
+          "docs": "Retrieves a workflow definition."
+        },
+        {
+          "info": { "name": "Execute a workflow.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs",
+            "params": [
+              { "name": "workflow_id", "value": "", "type": "path", "description": "The ID of the workflow." }
+            ],
+            "body": { "type": "form-urlencoded", "data": "message=Run+the+workflow&stream=true" }
+          },
+          "docs": "Executes a multi-step workflow. Returns JSON, or text/event-stream when stream=true."
+        },
+        {
+          "info": { "name": "Get a workflow run.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs/:run_id",
+            "params": [
+              { "name": "workflow_id", "value": "", "type": "path", "description": "The ID of the workflow." },
+              { "name": "run_id", "value": "", "type": "path", "description": "The ID of the run." }
+            ]
+          },
+          "docs": "Retrieves a workflow run."
+        },
+        {
+          "info": { "name": "Cancel a workflow run.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs/:run_id",
+            "params": [
+              { "name": "workflow_id", "value": "", "type": "path", "description": "The ID of the workflow." },
+              { "name": "run_id", "value": "", "type": "path", "description": "The ID of the run." }
+            ]
+          },
+          "docs": "Cancels a workflow run."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List sessions.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/sessions?type=agent&limit=20&page=1"
+          },
+          "docs": "Lists agent, team, or workflow sessions with filtering and pagination."
+        },
+        {
+          "info": { "name": "Create a session.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/sessions",
+            "body": { "type": "json", "data": "{\n  \"session_name\": \"My Session\"\n}" }
+          },
+          "docs": "Creates a new session."
+        },
+        {
+          "info": { "name": "Get a session.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/sessions/:session_id",
+            "params": [
+              { "name": "session_id", "value": "", "type": "path", "description": "The ID of the session." }
+            ]
+          },
+          "docs": "Retrieves a session by ID."
+        },
+        {
+          "info": { "name": "Delete a session.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:7777/sessions/:session_id",
+            "params": [
+              { "name": "session_id", "value": "", "type": "path", "description": "The ID of the session." }
+            ]
+          },
+          "docs": "Deletes a session."
+        },
+        {
+          "info": { "name": "List runs in a session.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/sessions/:session_id/runs",
+            "params": [
+              { "name": "session_id", "value": "", "type": "path", "description": "The ID of the session." }
+            ]
+          },
+          "docs": "Lists runs belonging to a session."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Memory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List memories.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/memories" },
+          "docs": "Lists stored memories."
+        },
+        {
+          "info": { "name": "Create a memory.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/memories",
+            "body": { "type": "json", "data": "{\n  \"memory\": \"User prefers concise answers.\",\n  \"user_id\": \"user@example.com\",\n  \"topics\": [\"preferences\"]\n}" }
+          },
+          "docs": "Creates a new persistent memory."
+        },
+        {
+          "info": { "name": "Get memory topics.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/memories/topics" },
+          "docs": "Lists distinct topics/tags used across stored memories."
+        },
+        {
+          "info": { "name": "Get user memory statistics.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/memories/stats" },
+          "docs": "Aggregate memory counts and usage per user."
+        },
+        {
+          "info": { "name": "Optimize user memories.", "type": "http" },
+          "http": { "method": "POST", "url": "http://localhost:7777/memories/optimize" },
+          "docs": "Consolidates and deduplicates a user's stored memories."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Knowledge",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List knowledge content.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/knowledge/content" },
+          "docs": "Paginated list of all content in the knowledge base."
+        },
+        {
+          "info": { "name": "Upload knowledge content.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/knowledge/content",
+            "body": { "type": "form-data", "data": "url=https://example.com/article&name=Example+Article" }
+          },
+          "docs": "Uploads a file, URL, or raw text into the knowledge base."
+        },
+        {
+          "info": { "name": "Search knowledge.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/knowledge/search?query=pricing"
+          },
+          "docs": "Searches indexed knowledge content."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Evals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": { "name": "List evaluation runs.", "type": "http" },
+          "http": { "method": "GET", "url": "http://localhost:7777/eval-runs" },
+          "docs": "Lists evaluation runs."
+        },
+        {
+          "info": { "name": "Execute an evaluation.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/eval-runs",
+            "body": { "type": "json", "data": "{\n  \"eval_type\": \"accuracy\",\n  \"input\": \"What is the capital of France?\",\n  \"agent_id\": \"my-agent\",\n  \"expected_output\": \"Paris\"\n}" }
+          },
+          "docs": "Executes an accuracy, agent-as-judge, performance, or reliability evaluation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

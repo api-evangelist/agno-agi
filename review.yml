@@ -1,0 +1,121 @@
+aid: agno-agi
+name: Agno
+review:
+  question: Does Agno expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-02'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: true
+  asyncapiScopeNote: |
+    Per updated API Evangelist scope (2026-05-29), HTTP Server-Sent Events
+    (SSE) is in-scope for AsyncAPI modeling. An AsyncAPI 2.6 document was
+    created at asyncapi/agno-agi-asyncapi.yml describing the text/event-stream
+    output emitted by agent, team, and workflow runs when stream=true (the
+    AgentOS default). No WebSocket surface was modeled as a public channel
+    because the one WebSocket route that exists in the codebase is explicitly
+    called "undocumented" by Agno's own engineering team and is not published
+    in the official API reference.
+findings:
+  summary: |
+    Agno does not publish a documented public WebSocket API. AgentOS - the
+    self-hostable REST API server generated from the open-source Agno
+    framework - exposes agents, teams, workflows, sessions, memory,
+    knowledge, and evals as request/response REST endpoints under whatever
+    host/port you deploy it on (default http://localhost:7777 in local
+    development). Long-running agent, team, and workflow runs stream
+    incremental output as HTTP Server-Sent Events (text/event-stream) when
+    stream=true, which is the default. Separately, the AgentOS codebase
+    contains a WebSocket route at /workflows/ws that the hosted os.agno.com
+    Control Plane UI uses internally to drive workflow chat in the browser;
+    a GitHub issue filed by a user (agno-agi/agno#6281) against that route
+    is titled "Custom headers not supported when running Workflows via
+    Control Plane WebSocket" and the route is described there as an
+    "undocumented WebSocket endpoint" - it does not appear in Agno's
+    published API reference (docs.agno.com/reference-api) or its
+    documentation index (docs.agno.com/llms.txt). Because it is not
+    documented as a public interface, it is treated here as an internal
+    implementation detail rather than a public WebSocket API, consistent
+    with how this catalog treats SSE-over-REST elsewhere: real, but not
+    WebSocket, and in this case also not documented for external use.
+  transports:
+    - protocol: REST
+      scheme: http/https
+      baseURL: http://localhost:7777
+      documented: true
+      note: Self-hosted; base URL depends entirely on where you deploy AgentOS. No fixed Agno-operated multi-tenant base URL exists.
+    - protocol: SSE
+      scheme: http/https
+      note: Server-Sent Events (text/event-stream) delivered over the same REST run endpoints (/agents/{id}/runs, /teams/{id}/runs, /workflows/{id}/runs) when stream=true. Not WebSocket.
+      documented: true
+    - protocol: WebSocket
+      scheme: ws/wss
+      documented: false
+      note: A /workflows/ws route exists in the open-source AgentOS codebase and is used internally by the hosted Control Plane UI, but Agno's own maintainers describe it as undocumented and it is absent from the published API reference and docs index.
+  endpointsConfirmedRest:
+    - GET  http://localhost:7777/agents
+    - GET  http://localhost:7777/agents/{agent_id}
+    - POST http://localhost:7777/agents/{agent_id}/runs
+    - POST http://localhost:7777/runs/{run_id}/cancel
+    - GET  http://localhost:7777/teams
+    - POST http://localhost:7777/teams/{team_id}/runs
+    - GET  http://localhost:7777/workflows
+    - POST http://localhost:7777/workflows/{workflow_id}/runs
+    - GET  http://localhost:7777/sessions
+    - POST http://localhost:7777/sessions
+    - GET  http://localhost:7777/sessions/{session_id}
+    - DELETE http://localhost:7777/sessions/{session_id}
+    - GET  http://localhost:7777/memories
+    - POST http://localhost:7777/memories
+    - GET  http://localhost:7777/knowledge/content
+    - POST http://localhost:7777/knowledge/content
+    - GET  http://localhost:7777/eval-runs
+    - POST http://localhost:7777/eval-runs
+  endpointsModeled:
+    - note: >-
+        Sibling endpoints named in docs.agno.com/llms.txt and cross-referenced
+        against Agno's REST conventions but not individually opened as full
+        schema pages during this review: workflow get-details/get-run/cancel,
+        session rename/get-runs, memory optimize/topics/statistics, knowledge
+        search/delete/list-sources, and eval update/delete. These are modeled
+        in openapi/agno-agi-openapi.yml as representative REST paths
+        consistent with the documented naming pattern, not verified
+        field-by-field against a downloaded machine-readable spec.
+sources:
+  - url: https://docs.agno.com/reference-api/overview
+    type: APIReference
+    note: AgentOS API described as RESTful; bearer-token auth via OS_SECURITY_KEY; no WebSocket mentioned.
+  - url: https://docs.agno.com/agent-os/using-the-api
+    type: Documentation
+    note: Base URL http://localhost:7777; curl examples use application/x-www-form-urlencoded POSTs; stream=true documented.
+  - url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+    type: APIReference
+    note: Confirms POST /agents/{agent_id}/runs, request fields, and text/event-stream response type for streaming.
+  - url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+    type: APIReference
+    note: >-
+      Confirms POST /workflows/{workflow_id}/runs with text/event-stream
+      streaming (first event is "event RunStarted").
+  - url: https://docs.agno.com/llms.txt
+    type: Documentation
+    note: Documentation index listing REST endpoint groups for workflows, sessions, memory, knowledge, and evals; no WebSocket path listed.
+  - url: https://docs.agno.com/agent-os/control-plane
+    type: Documentation
+    note: States the Control Plane "connects directly from your browser to your AgentOS runtime. No data is sent to Agno."; does not name a WebSocket endpoint.
+  - url: https://github.com/agno-agi/agno/issues/6281
+    type: SourceCode
+    note: User-filed issue naming the /workflows/ws route and calling it an "undocumented WebSocket endpoint" used by the Control Plane.
+  - url: https://www.agno.com/agentos
+    type: Documentation
+    note: Product page describing AgentOS as "50+ endpoints" with SSE and websockets available to build on, but without publishing the WebSocket route in the API reference.
+actions:
+  asyncapiPath: asyncapi/agno-agi-asyncapi.yml
+  apisYmlUpdated: true
+  reason: |
+    No documented public WebSocket channel exists. Under the 2026-05-29 scope
+    that allows SSE in AsyncAPI, an AsyncAPI 2.6 document was authored for the
+    text/event-stream output of agent/team/workflow runs, with HTTP+SSE
+    transport documented explicitly (server protocol, channel bindings,
+    info.x-transport-notes) so SSE is never misrepresented as WebSocket. The
+    undocumented /workflows/ws route found in source is called out in
+    findings and apis.yml for transparency but is not modeled as a public
+    AsyncAPI channel because Agno has not published it as part of the API.

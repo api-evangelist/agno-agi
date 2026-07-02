@@ -1,0 +1,292 @@
+asyncapi: '2.6.0'
+id: 'urn:com:agno:agentos:v1:runs:sse'
+info:
+  title: Agno AgentOS Run Streaming (HTTP + SSE)
+  version: '1.0.0'
+  description: |
+    AsyncAPI 2.6 description of AgentOS's **run streaming** surface. AgentOS
+    does not publish a documented public WebSocket API. The asynchronous /
+    event-style transport documented at https://docs.agno.com/agent-os/api,
+    https://docs.agno.com/agent-os/using-the-api, and
+    https://docs.agno.com/reference-api/schema/agents/create-agent-run is
+    **HTTP Server-Sent Events (SSE)** delivered over the same REST run
+    endpoints (`POST /agents/{agent_id}/runs`, `POST /teams/{team_id}/runs`,
+    `POST /workflows/{workflow_id}/runs`) when the request sets `stream=true`
+    - which is the AgentOS default. SSE is a one-way, server-to-client HTTP
+    streaming channel; it is **not** WebSocket.
+
+    From Agno's own API reference: "When `stream=true`, returns SSE events
+    with `event` and `data` fields," with a documented `text/event-stream`
+    response content type.
+
+    A separate WebSocket route (`/workflows/ws`) exists in the AgentOS
+    codebase and is used internally by the hosted os.agno.com Control Plane
+    UI, but Agno's own maintainers describe it as an "undocumented WebSocket
+    endpoint" (see agno-agi/agno#6281) - it is not part of the published
+    API reference or documentation index, so it is not modeled as a public
+    channel here. See review.yml for the full findings.
+
+    This document models the streamed event envelope common to agent, team,
+    and workflow runs. Request bodies (message, files, session_id, etc.) are
+    modeled in the companion OpenAPI document at
+    `openapi/agno-agi-openapi.yml`.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://apievangelist.com
+  license:
+    name: API documentation - Agno Terms of Service
+    url: https://www.agno.com
+  x-transport-notes:
+    transport: HTTP Server-Sent Events (SSE)
+    protocol: http/https
+    direction: server-to-client (one-way)
+    mediaType: text/event-stream
+    triggeredBy: >-
+      POST {baseURL}/agents/{agent_id}/runs (or /teams/{team_id}/runs, or
+      /workflows/{workflow_id}/runs) with stream=true (default)
+    notWebSocket: true
+    undocumentedWebSocketNote: >-
+      A /workflows/ws WebSocket route exists in source but is described by
+      Agno's own maintainers as undocumented; it is not modeled here.
+    source: https://docs.agno.com/agent-os/using-the-api
+defaultContentType: text/event-stream
+servers:
+  agentos:
+    url: 'localhost:7777'
+    protocol: http
+    description: |
+      Default local AgentOS address. AgentOS is self-hosted, so the real
+      host/port/scheme is whatever you deploy it on - there is no
+      Agno-operated multi-tenant base URL. Run streaming is delivered as
+      HTTP Server-Sent Events over this base when `stream=true` is set on
+      the run request. AsyncAPI 2.6 does not define a dedicated SSE protocol
+      identifier; `http` is used here and the SSE transport is documented in
+      `info.x-transport-notes` and on each channel.
+    security:
+      - bearerAuth: []
+channels:
+  /agents/{agent_id}/runs:
+    parameters:
+      agent_id:
+        description: The ID of the agent to run.
+        schema:
+          type: string
+    description: |
+      Agent run SSE stream. The client opens this channel by issuing
+      `POST /agents/{agent_id}/runs` with a form-encoded body containing
+      `message` and `stream=true` (the default). The server responds with
+      `Content-Type: text/event-stream` and emits a sequence of named SSE
+      events, each carrying a JSON payload in the `data:` field.
+    bindings:
+      http:
+        type: request
+        method: POST
+        bindingVersion: '0.3.0'
+      x-sse:
+        mediaType: text/event-stream
+        eventField: 'event'
+        dataField: 'data'
+    subscribe:
+      operationId: streamAgentRunEvents
+      summary: Subscribe to streamed agent run events (SSE).
+      description: |
+        After `POST /agents/{agent_id}/runs` is issued with `stream=true`,
+        the server emits an ordered sequence of named SSE events describing
+        run lifecycle and incremental content.
+      bindings:
+        http:
+          type: response
+          bindingVersion: '0.3.0'
+      message:
+        oneOf:
+          - $ref: '#/components/messages/RunStarted'
+          - $ref: '#/components/messages/RunContent'
+          - $ref: '#/components/messages/RunCompleted'
+          - $ref: '#/components/messages/RunError'
+  /teams/{team_id}/runs:
+    parameters:
+      team_id:
+        description: The ID of the team to run.
+        schema:
+          type: string
+    description: |
+      Team run SSE stream. Same event envelope as the agent run channel,
+      opened via `POST /teams/{team_id}/runs` with `stream=true`.
+    bindings:
+      http:
+        type: request
+        method: POST
+        bindingVersion: '0.3.0'
+      x-sse:
+        mediaType: text/event-stream
+        eventField: 'event'
+        dataField: 'data'
+    subscribe:
+      operationId: streamTeamRunEvents
+      summary: Subscribe to streamed team run events (SSE).
+      bindings:
+        http:
+          type: response
+          bindingVersion: '0.3.0'
+      message:
+        oneOf:
+          - $ref: '#/components/messages/RunStarted'
+          - $ref: '#/components/messages/RunContent'
+          - $ref: '#/components/messages/RunCompleted'
+          - $ref: '#/components/messages/RunError'
+  /workflows/{workflow_id}/runs:
+    parameters:
+      workflow_id:
+        description: The ID of the workflow to execute.
+        schema:
+          type: string
+    description: |
+      Workflow run SSE stream. Opened via
+      `POST /workflows/{workflow_id}/runs` with `stream=true` (default).
+      Per Agno's docs, the first event on a workflow run is
+      `event: RunStarted`, followed by per-step events, and a terminal
+      completion or error event.
+    bindings:
+      http:
+        type: request
+        method: POST
+        bindingVersion: '0.3.0'
+      x-sse:
+        mediaType: text/event-stream
+        eventField: 'event'
+        dataField: 'data'
+    subscribe:
+      operationId: streamWorkflowRunEvents
+      summary: Subscribe to streamed workflow run events (SSE).
+      bindings:
+        http:
+          type: response
+          bindingVersion: '0.3.0'
+      message:
+        oneOf:
+          - $ref: '#/components/messages/RunStarted'
+          - $ref: '#/components/messages/WorkflowStepEvent'
+          - $ref: '#/components/messages/RunContent'
+          - $ref: '#/components/messages/RunCompleted'
+          - $ref: '#/components/messages/RunError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: 'AgentOS Security Key (OS_SECURITY_KEY)'
+      description: |
+        Bearer token equal to the AgentOS instance's configured
+        OS_SECURITY_KEY. Required only if a Security Key is configured;
+        authentication is disabled otherwise.
+  messages:
+    RunStarted:
+      name: RunStarted
+      title: Run started event
+      summary: First SSE event emitted when a run begins.
+      contentType: application/json
+      description: |
+        Sent as `event: RunStarted\ndata: {json}\n\n`. Marks the start of an
+        agent, team, or workflow run and carries the run_id and session_id.
+      payload:
+        $ref: '#/components/schemas/RunEventEnvelope'
+      examples:
+        - name: runStarted
+          payload:
+            event: RunStarted
+            run_id: run_01jbd6g2qdfw2adyrt2az8hz4w
+            session_id: session_123
+    RunContent:
+      name: RunContent
+      title: Streamed run content chunk
+      summary: |
+        A single SSE event carrying an incremental slice of model output.
+        Many of these are emitted per request, in order.
+      contentType: application/json
+      description: |
+        Sent as `event: RunContent\ndata: {json}\n\n`. The `content` field
+        carries the incremental text delta for the run.
+      payload:
+        $ref: '#/components/schemas/RunEventEnvelope'
+      examples:
+        - name: contentChunk
+          payload:
+            event: RunContent
+            run_id: run_01jbd6g2qdfw2adyrt2az8hz4w
+            content: 'Hello'
+    WorkflowStepEvent:
+      name: WorkflowStepEvent
+      title: Workflow step lifecycle event
+      summary: Emitted as a workflow transitions between steps.
+      contentType: application/json
+      description: |
+        Workflow-specific event indicating a step has started, produced
+        output, or completed, per
+        https://docs.agno.com/agent-os/usage/client/run-workflows.
+      payload:
+        $ref: '#/components/schemas/RunEventEnvelope'
+      examples:
+        - name: workflowAgentCompleted
+          payload:
+            event: WorkflowAgentCompleted
+            run_id: run_01jbd6g2qdfw2adyrt2az8hz4w
+            step_name: research
+    RunCompleted:
+      name: RunCompleted
+      title: Run completed event
+      summary: Terminal event marking successful completion of the run.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunEventEnvelope'
+      examples:
+        - name: runCompleted
+          payload:
+            event: RunCompleted
+            run_id: run_01jbd6g2qdfw2adyrt2az8hz4w
+            content: 'Full final response text.'
+    RunError:
+      name: RunError
+      title: Run error event
+      summary: Terminal event emitted if the run fails.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunEventEnvelope'
+      examples:
+        - name: runError
+          payload:
+            event: RunError
+            run_id: run_01jbd6g2qdfw2adyrt2az8hz4w
+            error: 'Tool execution failed.'
+  schemas:
+    RunEventEnvelope:
+      type: object
+      description: |
+        Common envelope shape for AgentOS run SSE events. Not all fields are
+        present on every event type; unofficial reconstruction from Agno's
+        API reference and documentation, since no machine-readable AsyncAPI
+        or OpenAPI SSE schema is published by Agno.
+      required:
+        - event
+        - run_id
+      properties:
+        event:
+          type: string
+          description: |
+            Event type name, e.g. RunStarted, RunContent, RunCompleted,
+            RunError, or a workflow-specific step event.
+        run_id:
+          type: string
+          description: Unique identifier for the run. Shared across all events for that run.
+        session_id:
+          type: string
+          description: The session the run belongs to, if any.
+        content:
+          type: string
+          description: Incremental or final text content for the run, when applicable.
+        step_name:
+          type: string
+          description: Name of the workflow step this event pertains to, for workflow runs.
+        error:
+          type: string
+          description: Error message, present only on RunError events.

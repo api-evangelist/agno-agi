@@ -1,0 +1,321 @@
+{
+  "info": {
+    "name": "Agno AgentOS API",
+    "description": "AgentOS is Agno's self-hostable runtime API server for running agents, teams, and workflows and managing sessions, memory, knowledge, and evals. Base URL defaults to http://localhost:7777 in local development and depends on your own deployment - there is no fixed Agno-operated multi-tenant base URL. If a Security Key (OS_SECURITY_KEY) is configured, requests require a Bearer token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:7777", "type": "string" },
+    { "key": "bearerToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Agents",
+      "item": [
+        {
+          "name": "List all agents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/agents", "host": ["{{baseUrl}}"], "path": ["agents"] },
+            "description": "Lists all agents configured on this AgentOS instance."
+          }
+        },
+        {
+          "name": "Get an agent",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/agents/:agent_id", "host": ["{{baseUrl}}"], "path": ["agents", ":agent_id"], "variable": [{ "key": "agent_id", "value": "" }] },
+            "description": "Retrieves configuration details for a single agent."
+          }
+        },
+        {
+          "name": "Create an agent run",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "message", "value": "Tell me about Agno" },
+                { "key": "stream", "value": "true" },
+                { "key": "user_id", "value": "user@example.com" },
+                { "key": "session_id", "value": "session_123" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/agents/:agent_id/runs", "host": ["{{baseUrl}}"], "path": ["agents", ":agent_id", "runs"], "variable": [{ "key": "agent_id", "value": "" }] },
+            "description": "Runs an agent with a message. Returns JSON, or a text/event-stream when stream=true."
+          }
+        },
+        {
+          "name": "Cancel a run",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/runs/:run_id/cancel", "host": ["{{baseUrl}}"], "path": ["runs", ":run_id", "cancel"], "variable": [{ "key": "run_id", "value": "" }] },
+            "description": "Requests cancellation of an in-progress run."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "List all teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/teams", "host": ["{{baseUrl}}"], "path": ["teams"] },
+            "description": "Retrieves a comprehensive list of all teams configured on this OS instance."
+          }
+        },
+        {
+          "name": "Create a team run",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "multipart/form-data" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "message", "value": "Research and summarize this topic" },
+                { "key": "stream", "value": "true" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/teams/:team_id/runs", "host": ["{{baseUrl}}"], "path": ["teams", ":team_id", "runs"], "variable": [{ "key": "team_id", "value": "" }] },
+            "description": "Runs a team of agents against a message."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workflows",
+      "item": [
+        {
+          "name": "List all workflows",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workflows", "host": ["{{baseUrl}}"], "path": ["workflows"] },
+            "description": "Lists all workflows configured on this AgentOS instance."
+          }
+        },
+        {
+          "name": "Get workflow details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workflows/:workflow_id", "host": ["{{baseUrl}}"], "path": ["workflows", ":workflow_id"], "variable": [{ "key": "workflow_id", "value": "" }] },
+            "description": "Retrieves a workflow definition."
+          }
+        },
+        {
+          "name": "Execute a workflow",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "message", "value": "Run the workflow" },
+                { "key": "stream", "value": "true" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/workflows/:workflow_id/runs", "host": ["{{baseUrl}}"], "path": ["workflows", ":workflow_id", "runs"], "variable": [{ "key": "workflow_id", "value": "" }] },
+            "description": "Executes a multi-step workflow. Returns JSON, or text/event-stream when stream=true."
+          }
+        },
+        {
+          "name": "Get a workflow run",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workflows/:workflow_id/runs/:run_id", "host": ["{{baseUrl}}"], "path": ["workflows", ":workflow_id", "runs", ":run_id"], "variable": [{ "key": "workflow_id", "value": "" }, { "key": "run_id", "value": "" }] },
+            "description": "Retrieves a workflow run."
+          }
+        },
+        {
+          "name": "Cancel a workflow run",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workflows/:workflow_id/runs/:run_id", "host": ["{{baseUrl}}"], "path": ["workflows", ":workflow_id", "runs", ":run_id"], "variable": [{ "key": "workflow_id", "value": "" }, { "key": "run_id", "value": "" }] },
+            "description": "Cancels a workflow run."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "List sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions?type=agent&limit=20&page=1", "host": ["{{baseUrl}}"], "path": ["sessions"], "query": [{ "key": "type", "value": "agent" }, { "key": "limit", "value": "20" }, { "key": "page", "value": "1" }] },
+            "description": "Lists agent, team, or workflow sessions with filtering and pagination."
+          }
+        },
+        {
+          "name": "Create a session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"session_name\": \"My Session\"\n}" },
+            "url": { "raw": "{{baseUrl}}/sessions", "host": ["{{baseUrl}}"], "path": ["sessions"] },
+            "description": "Creates a new session."
+          }
+        },
+        {
+          "name": "Get a session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Retrieves a session by ID."
+          }
+        },
+        {
+          "name": "Delete a session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Deletes a session."
+          }
+        },
+        {
+          "name": "List runs in a session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/sessions/:session_id/runs", "host": ["{{baseUrl}}"], "path": ["sessions", ":session_id", "runs"], "variable": [{ "key": "session_id", "value": "" }] },
+            "description": "Lists runs belonging to a session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memory",
+      "item": [
+        {
+          "name": "List memories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/memories", "host": ["{{baseUrl}}"], "path": ["memories"] },
+            "description": "Lists stored memories."
+          }
+        },
+        {
+          "name": "Create a memory",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memory\": \"User prefers concise answers.\",\n  \"user_id\": \"user@example.com\",\n  \"topics\": [\"preferences\"]\n}" },
+            "url": { "raw": "{{baseUrl}}/memories", "host": ["{{baseUrl}}"], "path": ["memories"] },
+            "description": "Creates a new persistent memory."
+          }
+        },
+        {
+          "name": "Get memory topics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/memories/topics", "host": ["{{baseUrl}}"], "path": ["memories", "topics"] },
+            "description": "Lists distinct topics/tags used across stored memories."
+          }
+        },
+        {
+          "name": "Get user memory statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/memories/stats", "host": ["{{baseUrl}}"], "path": ["memories", "stats"] },
+            "description": "Aggregate memory counts and usage per user."
+          }
+        },
+        {
+          "name": "Optimize user memories",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/memories/optimize", "host": ["{{baseUrl}}"], "path": ["memories", "optimize"] },
+            "description": "Consolidates and deduplicates a user's stored memories."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Knowledge",
+      "item": [
+        {
+          "name": "List knowledge content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/knowledge/content", "host": ["{{baseUrl}}"], "path": ["knowledge", "content"] },
+            "description": "Paginated list of all content in the knowledge base."
+          }
+        },
+        {
+          "name": "Upload knowledge content",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "multipart/form-data" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "url", "value": "https://example.com/article" },
+                { "key": "name", "value": "Example Article" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/knowledge/content", "host": ["{{baseUrl}}"], "path": ["knowledge", "content"] },
+            "description": "Uploads a file, URL, or raw text into the knowledge base."
+          }
+        },
+        {
+          "name": "Search knowledge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/knowledge/search?query=pricing", "host": ["{{baseUrl}}"], "path": ["knowledge", "search"], "query": [{ "key": "query", "value": "pricing" }] },
+            "description": "Searches indexed knowledge content."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evals",
+      "item": [
+        {
+          "name": "List evaluation runs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/eval-runs", "host": ["{{baseUrl}}"], "path": ["eval-runs"] },
+            "description": "Lists evaluation runs."
+          }
+        },
+        {
+          "name": "Execute an evaluation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"eval_type\": \"accuracy\",\n  \"input\": \"What is the capital of France?\",\n  \"agent_id\": \"my-agent\",\n  \"expected_output\": \"Paris\"\n}" },
+            "url": { "raw": "{{baseUrl}}/eval-runs", "host": ["{{baseUrl}}"], "path": ["eval-runs"] },
+            "description": "Executes an accuracy, agent-as-judge, performance, or reliability evaluation."
+          }
+        }
+      ]
+    }
+  ]
+}

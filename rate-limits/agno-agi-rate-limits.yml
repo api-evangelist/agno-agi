@@ -1,0 +1,64 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Agno
+providerId: agno-agi
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- AI
+- Agents
+- Multi-Agent
+- Rate Limiting
+- Quotas
+description: >-
+  Agno does not publish fixed numeric rate limits for the AgentOS API,
+  because AgentOS is software you run yourself rather than a shared
+  multi-tenant service Agno operates. Throughput on a self-hosted instance is
+  bounded only by your own infrastructure (CPU, memory, concurrency of the
+  ASGI server) and by the rate limits of whichever LLM provider(s) you
+  configure the agents to call - those provider limits are documented by the
+  provider, not by Agno. The hosted os.agno.com Control Plane gates
+  concurrent "live connections" and seats by pricing plan rather than by a
+  request-per-minute cap.
+notes: >-
+  No per-account or per-endpoint numeric AgentOS API limits are documented as
+  of the review date. If you need hard throughput guarantees, size and scale
+  the AgentOS deployment (workers, replicas, database) yourself and consult
+  your configured model providers' rate-limit docs.
+sources:
+- https://docs.agno.com
+- https://docs.agno.com/agent-os/api
+- https://www.agno.com/pricing
+responseCodes:
+  throttled: 429
+limits:
+- name: AgentOS API Requests
+  scope: deployment
+  metric: requests
+  limit: not published (self-hosted; infrastructure-bound)
+  notes: No fixed numeric request-rate limit is documented; bounded by your own deployment's compute and concurrency.
+- name: Control Plane Live Connections
+  scope: account
+  metric: connections
+  limit: per plan (1 included on Pro, additional at $95/month each)
+  notes: Gates concurrent AgentOS instances connected to the hosted os.agno.com Control Plane, not per-request throughput.
+- name: Control Plane Seats
+  scope: account
+  metric: seats
+  limit: per plan (4 included on Pro, additional at $30/month each)
+  notes: Governs number of users who can access the hosted Control Plane, not API throughput.
+- name: Underlying Model Provider Limits
+  scope: model provider
+  metric: tokens/requests
+  limit: set by the configured LLM provider
+  notes: Agent, team, and workflow runs are ultimately bounded by the rate limits of whichever model provider (OpenAI, Anthropic, etc.) is configured for that agent.
+policies:
+- name: Bring Your Own Model Limits
+  description: Because AgentOS is self-hosted and model-agnostic, effective throughput is governed by the rate limits of the LLM providers you configure, not by Agno.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After when a configured model provider or a fronting proxy returns 429.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
