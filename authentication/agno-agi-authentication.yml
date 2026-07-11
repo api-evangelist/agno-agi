@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/agno-agi-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key
+    is configured on the AgentOS instance; disabled otherwise.
+  sources:
+  - openapi/agno-agi-openapi.yml

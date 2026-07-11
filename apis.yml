@@ -172,6 +172,12 @@ apis:
     evaluation runs against an agent or team, then list and update stored
     evaluation results to track quality over time.
 common:
+- type: DomainSecurity
+  url: security/agno-agi-domain-security.yml
+- type: Authentication
+  url: authentication/agno-agi-authentication.yml
+- url: https://agno.com/blog
+  type: Blog
 - type: GitHubOrganization
   url: https://github.com/agno-agi
 - type: LinkedIn
