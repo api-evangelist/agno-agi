@@ -172,6 +172,8 @@ apis:
     evaluation runs against an agent or team, then list and update stored
     evaluation results to track quality over time.
 common:
+- type: AgenticAccess
+  url: agentic-access/agno-agi-agentic-access.yml
 - type: DomainSecurity
   url: security/agno-agi-domain-security.yml
 - type: Authentication
