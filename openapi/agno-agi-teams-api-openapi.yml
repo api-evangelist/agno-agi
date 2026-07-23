@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS Agents Teams API
+  description: 'AgentOS is Agno''s self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an "Authorization: Bearer <token>" header; otherwise authentication is disabled. This document models the endpoints described in Agno''s public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno''s own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.'
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+- url: http://localhost:7777
+  description: Local AgentOS (default self-hosted address)
+security:
+- bearerAuth: []
+- {}
+tags:
+- name: Teams
+  description: Run and manage teams of agents.
+paths:
+  /teams:
+    get:
+      operationId: listTeams
+      tags:
+      - Teams
+      summary: List all teams
+      description: Retrieves a comprehensive list of all teams configured on this AgentOS instance.
+      responses:
+        '200':
+          description: A list of teams.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponse'
+  /teams/{team_id}/runs:
+    post:
+      operationId: createTeamRun
+      tags:
+      - Teams
+      summary: Create a team run
+      description: Runs a team of agents against a message, with the same streaming, session, and file-attachment semantics as an agent run.
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Run result (JSON) or SSE stream (text/event-stream).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    TeamResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            type: string
+    RunResponse:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        content:
+          type: string
+        status:
+          type: string
+    RunRequest:
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+        stream:
+          type: boolean
+          default: true
+        session_id:
+          type: string
+        user_id:
+          type: string
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+        version:
+          type: integer
+        background:
+          type: boolean
+          default: false
+        monitor:
+          type: boolean
+          default: true
+  responses:
+    NotFound:
+      description: Resource not found.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key is configured on the AgentOS instance; disabled otherwise.

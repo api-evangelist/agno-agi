@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS Agents Knowledge API
+  description: 'AgentOS is Agno''s self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an "Authorization: Bearer <token>" header; otherwise authentication is disabled. This document models the endpoints described in Agno''s public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno''s own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.'
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+- url: http://localhost:7777
+  description: Local AgentOS (default self-hosted address)
+security:
+- bearerAuth: []
+- {}
+tags:
+- name: Knowledge
+  description: Knowledge base content used for retrieval.
+paths:
+  /knowledge/content:
+    get:
+      operationId: listContent
+      tags:
+      - Knowledge
+      summary: List knowledge content
+      description: Paginated list of all content in the knowledge base with filtering and sorting.
+      parameters:
+      - name: db_id
+        in: query
+        schema:
+          type: string
+      - name: knowledge_id
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page of knowledge content.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentResponse'
+    post:
+      operationId: uploadContent
+      tags:
+      - Knowledge
+      summary: Upload knowledge content
+      description: Uploads a file, URL, or raw text into the knowledge base for chunking and indexing.
+      parameters:
+      - name: db_id
+        in: query
+        schema:
+          type: string
+      - name: knowledge_id
+        in: query
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ContentInput'
+      responses:
+        '202':
+          description: Content accepted for processing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentResponse'
+  /knowledge/search:
+    get:
+      operationId: searchKnowledge
+      tags:
+      - Knowledge
+      summary: Search knowledge content
+      parameters:
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Matching knowledge chunks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+components:
+  schemas:
+    ContentResponse:
+      type: object
+      properties:
+        content_id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+    ContentInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        file:
+          type: string
+          format: binary
+        text_content:
+          type: string
+        metadata:
+          type: string
+        reader_id:
+          type: string
+        chunker:
+          type: string
+        chunk_size:
+          type: integer
+        chunk_overlap:
+          type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key is configured on the AgentOS instance; disabled otherwise.

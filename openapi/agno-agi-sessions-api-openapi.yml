@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS Agents Sessions API
+  description: 'AgentOS is Agno''s self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an "Authorization: Bearer <token>" header; otherwise authentication is disabled. This document models the endpoints described in Agno''s public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno''s own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.'
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+- url: http://localhost:7777
+  description: Local AgentOS (default self-hosted address)
+security:
+- bearerAuth: []
+- {}
+tags:
+- name: Sessions
+  description: Conversation history and state for agents, teams, and workflows.
+paths:
+  /sessions:
+    get:
+      operationId: listSessions
+      tags:
+      - Sessions
+      summary: List sessions
+      description: Lists agent, team, or workflow sessions with filtering and pagination.
+      parameters:
+      - name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - agent
+          - team
+          - workflow
+          default: agent
+      - name: component_id
+        in: query
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        schema:
+          type: string
+      - name: session_name
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 20
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: sort_by
+        in: query
+        schema:
+          type: string
+          default: created_at
+      - name: sort_order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      responses:
+        '200':
+          description: A page of sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+    post:
+      operationId: createSession
+      tags:
+      - Sessions
+      summary: Create a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+      responses:
+        '200':
+          description: The created session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /sessions/{session_id}:
+    get:
+      operationId: getSessionById
+      tags:
+      - Sessions
+      summary: Get a session
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+    delete:
+      operationId: deleteSession
+      tags:
+      - Sessions
+      summary: Delete a session
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Deletion acknowledged.
+  /sessions/{session_id}/runs:
+    get:
+      operationId: getSessionRuns
+      tags:
+      - Sessions
+      summary: List runs in a session
+      parameters:
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Runs belonging to the session.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RunResponse'
+components:
+  schemas:
+    RunResponse:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        content:
+          type: string
+        status:
+          type: string
+    Session:
+      type: object
+      properties:
+        session_id:
+          type: string
+        session_name:
+          type: string
+        session_state:
+          type: object
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    SessionInput:
+      type: object
+      properties:
+        session_name:
+          type: string
+        component_id:
+          type: string
+        user_id:
+          type: string
+    SessionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total_pages:
+              type: integer
+            total_count:
+              type: integer
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key is configured on the AgentOS instance; disabled otherwise.

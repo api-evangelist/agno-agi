@@ -1,0 +1,131 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS Agents Memory API
+  description: 'AgentOS is Agno''s self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an "Authorization: Bearer <token>" header; otherwise authentication is disabled. This document models the endpoints described in Agno''s public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno''s own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.'
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+- url: http://localhost:7777
+  description: Local AgentOS (default self-hosted address)
+security:
+- bearerAuth: []
+- {}
+tags:
+- name: Memory
+  description: Persistent per-user memories.
+paths:
+  /memories:
+    get:
+      operationId: listMemories
+      tags:
+      - Memory
+      summary: List memories
+      responses:
+        '200':
+          description: A list of stored memories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Memory'
+    post:
+      operationId: createMemory
+      tags:
+      - Memory
+      summary: Create a memory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryInput'
+      responses:
+        '200':
+          description: The created memory.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+  /memories/topics:
+    get:
+      operationId: getMemoryTopics
+      tags:
+      - Memory
+      summary: List memory topics
+      responses:
+        '200':
+          description: Distinct topics/tags used across stored memories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /memories/stats:
+    get:
+      operationId: getUserMemoryStatistics
+      tags:
+      - Memory
+      summary: Get user memory statistics
+      responses:
+        '200':
+          description: Aggregate memory counts and usage per user.
+          content:
+            application/json:
+              schema:
+                type: object
+  /memories/optimize:
+    post:
+      operationId: optimizeUserMemories
+      tags:
+      - Memory
+      summary: Optimize user memories
+      description: Consolidates and deduplicates a user's stored memories.
+      responses:
+        '200':
+          description: Optimization result.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    MemoryInput:
+      type: object
+      required:
+      - memory
+      properties:
+        memory:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        user_id:
+          type: string
+        topics:
+          type: array
+          items:
+            type: string
+    Memory:
+      type: object
+      properties:
+        memory_id:
+          type: string
+        memory:
+          type: string
+        user_id:
+          type: string
+        topics:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key is configured on the AgentOS instance; disabled otherwise.

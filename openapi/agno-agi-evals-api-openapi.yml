@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS Agents Evals API
+  description: 'AgentOS is Agno''s self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an "Authorization: Bearer <token>" header; otherwise authentication is disabled. This document models the endpoints described in Agno''s public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno''s own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.'
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+- url: http://localhost:7777
+  description: Local AgentOS (default self-hosted address)
+security:
+- bearerAuth: []
+- {}
+tags:
+- name: Evals
+  description: Evaluation runs for quality and reliability.
+paths:
+  /eval-runs:
+    get:
+      operationId: listEvaluationRuns
+      tags:
+      - Evals
+      summary: List evaluation runs
+      responses:
+        '200':
+          description: A list of evaluation runs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvalRun'
+    post:
+      operationId: executeEvaluation
+      tags:
+      - Evals
+      summary: Execute an evaluation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvalRunInput'
+      responses:
+        '200':
+          description: The created evaluation run.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvalRun'
+components:
+  schemas:
+    EvalRun:
+      type: object
+      properties:
+        eval_run_id:
+          type: string
+        eval_type:
+          type: string
+        status:
+          type: string
+        score:
+          type: number
+    EvalRunInput:
+      type: object
+      required:
+      - eval_type
+      - input
+      properties:
+        eval_type:
+          type: string
+          enum:
+          - accuracy
+          - agent_as_judge
+          - performance
+          - reliability
+        input:
+          type: string
+          minLength: 1
+        agent_id:
+          type: string
+        team_id:
+          type: string
+        model_id:
+          type: string
+        model_provider:
+          type: string
+        expected_output:
+          type: string
+        criteria:
+          type: string
+        expected_tool_calls:
+          type: array
+          items:
+            type: string
+        scoring_strategy:
+          type: string
+          enum:
+          - numeric
+          - binary
+          default: binary
+        threshold:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 7
+        num_iterations:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 1
+        warmup_runs:
+          type: integer
+          minimum: 0
+          maximum: 10
+          default: 0
+        name:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a Security Key is configured on the AgentOS instance; disabled otherwise.
