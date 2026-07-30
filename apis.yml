@@ -9,7 +9,20 @@ description: Agno (formerly Phidata) is an open-source Python framework for buil
   connects a browser directly to a self-hosted AgentOS instance for chat, tracing,
   and monitoring; Agno does not operate a separate multi-tenant inference API of
   its own.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/agno-agi.png
 tags:
 - AI
 - Agents
@@ -22,155 +35,258 @@ created: '2026-07-02'
 modified: '2026-07-02'
 specificationVersion: '0.19'
 apis:
-- aid: agno-agi:agno-agentos-agents-api
-  name: Agno AgentOS Agents API
+- aid: agno-agi:agno-agi-agents-api
+  name: Agno Agents API
+  description: Run and manage individual agents.
+  humanURL: https://docs.agno.com/agent-os/api
+  baseURL: http://localhost:7777
   tags:
   - Agents
-  - Runs
-  - Streaming
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-agents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-evals-api
+  name: Agno Evals API
+  description: Evaluation runs for quality and reliability.
   humanURL: https://docs.agno.com/agent-os/api
   baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/using-the-api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  - url: asyncapi/agno-agi-asyncapi.yml
-    type: AsyncAPI
-  - url: collections/agno-agi.postman_collection.json
-    type: Postman
-  - url: collections/agno-agi.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, and cancel runs for individual agents hosted
-    on a self-run AgentOS instance. Runs accept a message plus optional files,
-    session, user, and dependencies, and can return a single JSON response or
-    stream incremental Server-Sent Events when stream=true.
-- aid: agno-agi:agno-agentos-teams-api
-  name: Agno AgentOS Teams API
-  tags:
-  - Teams
-  - Multi-Agent
-  - Runs
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.agno.com/agent-os/api
-  baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/using-the-api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  - url: collections/agno-agi.postman_collection.json
-    type: Postman
-  - url: collections/agno-agi.opencollection.json
-    type: OpenCollection
-  description: List teams configured on an AgentOS instance and create team runs
-    that orchestrate multiple agents against a shared task, with the same
-    streaming, session, and file-attachment semantics as individual agent runs.
-- aid: agno-agi:agno-agentos-workflows-api
-  name: Agno AgentOS Workflows API
-  tags:
-  - Workflows
-  - Orchestration
-  - Runs
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.agno.com/agent-os/usage/client/run-workflows
-  baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/usage/client/run-workflows
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  - url: collections/agno-agi.postman_collection.json
-    type: Postman
-  - url: collections/agno-agi.opencollection.json
-    type: OpenCollection
-  description: List, execute, inspect, and cancel multi-step workflow runs over
-    REST, with text/event-stream output when stream=true. The AgentOS Control
-    Plane UI additionally drives workflow runs over an internal, undocumented
-    /workflows/ws WebSocket that is not part of the published public API.
-- aid: agno-agi:agno-agentos-sessions-api
-  name: Agno AgentOS Sessions API
-  tags:
-  - Sessions
-  - Conversation History
-  - State
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.agno.com/agent-os/api
-  baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  description: Create, list, retrieve, rename, and delete agent/team/workflow
-    sessions, and list the runs that belong to a session, so conversation
-    history and state persist across multiple requests.
-- aid: agno-agi:agno-agentos-memory-api
-  name: Agno AgentOS Memory API
-  tags:
-  - Memory
-  - Personalization
-  - User Memories
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.agno.com/agent-os/api
-  baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/memory/list-memories
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  description: Create, list, update, delete, and optimize persistent per-user
-    memories, plus fetch memory topics and usage statistics, for personalizing
-    agent behavior across sessions.
-- aid: agno-agi:agno-agentos-knowledge-api
-  name: Agno AgentOS Knowledge API
-  tags:
-  - Knowledge
-  - RAG
-  - Vector Search
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://docs.agno.com/agent-os/api
-  baseURL: http://localhost:7777
-  properties:
-  - url: https://docs.agno.com/agent-os/api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/knowledge/list-content
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  description: Upload files, URLs, or raw text into a knowledge base with
-    configurable chunking, then list, search, and delete indexed content that
-    agents retrieve against at run time.
-- aid: agno-agi:agno-agentos-evals-api
-  name: Agno AgentOS Evals API
   tags:
   - Evals
-  - Evaluation
-  - Quality
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-evals-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-knowledge-api
+  name: Agno Knowledge API
+  description: Knowledge base content used for retrieval.
   humanURL: https://docs.agno.com/agent-os/api
   baseURL: http://localhost:7777
+  tags:
+  - Knowledge
   properties:
-  - url: https://docs.agno.com/agent-os/api
-    type: Documentation
-  - url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
-    type: APIReference
-  - url: openapi/agno-agi-openapi.yml
-    type: OpenAPI
-  description: Execute accuracy, agent-as-judge, performance, and reliability
-    evaluation runs against an agent or team, then list and update stored
-    evaluation results to track quality over time.
+  - type: OpenAPI
+    url: openapi/agno-agi-knowledge-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-memory-api
+  name: Agno Memory API
+  description: Persistent per-user memories.
+  humanURL: https://docs.agno.com/agent-os/api
+  baseURL: http://localhost:7777
+  tags:
+  - Memory
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-memory-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-sessions-api
+  name: Agno Sessions API
+  description: Conversation history and state for agents, teams, and workflows.
+  humanURL: https://docs.agno.com/agent-os/api
+  baseURL: http://localhost:7777
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-teams-api
+  name: Agno Teams API
+  description: Run and manage teams of agents.
+  humanURL: https://docs.agno.com/agent-os/api
+  baseURL: http://localhost:7777
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-teams-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
+- aid: agno-agi:agno-agi-workflows-api
+  name: Agno Workflows API
+  description: Run and manage multi-step workflows.
+  humanURL: https://docs.agno.com/agent-os/api
+  baseURL: http://localhost:7777
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/agno-agi-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/using-the-api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/agents/create-agent-run
+  - type: AsyncAPI
+    url: asyncapi/agno-agi-asyncapi.yml
+  - type: Postman
+    url: collections/agno-agi.postman_collection.json
+  - type: OpenCollection
+    url: collections/agno-agi.opencollection.json
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/teams/list-all-teams
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/usage/client/run-workflows
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/workflows/execute-workflow
+  - type: Documentation
+    url: https://docs.agno.com/agent-os/api
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/sessions/list-sessions
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/memory/list-memories
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/knowledge/list-content
+  - type: APIReference
+    url: https://docs.agno.com/reference-api/schema/evals/list-evaluation-runs
 common:
 - type: AgenticAccess
   url: agentic-access/agno-agi-agentic-access.yml
