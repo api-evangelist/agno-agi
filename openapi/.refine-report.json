@@ -1,0 +1,26 @@
+{
+  "provider": "agno-agi",
+  "sources": [
+    "agno-agi-agents-api-openapi.yml",
+    "agno-agi-evals-api-openapi.yml",
+    "agno-agi-knowledge-api-openapi.yml",
+    "agno-agi-memory-api-openapi.yml",
+    "agno-agi-sessions-api-openapi.yml",
+    "agno-agi-teams-api-openapi.yml",
+    "agno-agi-workflows-api-openapi.yml"
+  ],
+  "outputs": [
+    "agno-agi-agents-api-openapi.yml",
+    "agno-agi-evals-api-openapi.yml",
+    "agno-agi-knowledge-api-openapi.yml",
+    "agno-agi-memory-api-openapi.yml",
+    "agno-agi-sessions-api-openapi.yml",
+    "agno-agi-teams-api-openapi.yml",
+    "agno-agi-workflows-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

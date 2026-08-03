@@ -1,0 +1,859 @@
+openapi: 3.0.3
+info:
+  title: Agno AgentOS API
+  description: >-
+    AgentOS is Agno's self-hostable runtime and API server. It turns agents,
+    teams, and workflows defined with the open-source Agno Python framework
+    into a RESTful API exposing runs, sessions, memory, knowledge, and evals.
+    There is no single Agno-operated multi-tenant base URL - every AgentOS
+    instance runs on infrastructure you control, defaulting to
+    http://localhost:7777 in local development. When a Security Key
+    (OS_SECURITY_KEY) is configured, all routes require an
+    "Authorization: Bearer <token>" header; otherwise authentication is
+    disabled. This document models the endpoints described in Agno's public
+    API reference (docs.agno.com/reference-api) plus the sibling endpoints
+    named in Agno's own documentation index (docs.agno.com/llms.txt). Some
+    request/response field names are reconstructed from that reference
+    content rather than a downloaded machine-readable OpenAPI file, so treat
+    schemas as representative rather than byte-exact.
+  version: '1.0'
+  contact:
+    name: Agno
+    url: https://www.agno.com
+  license:
+    name: Mozilla Public License 2.0
+    url: https://github.com/agno-agi/agno/blob/main/LICENSE
+servers:
+  - url: http://localhost:7777
+    description: Local AgentOS (default self-hosted address)
+security:
+  - bearerAuth: []
+  - {}
+tags:
+  - name: Agents
+    description: Run and manage individual agents.
+  - name: Teams
+    description: Run and manage teams of agents.
+  - name: Workflows
+    description: Run and manage multi-step workflows.
+  - name: Sessions
+    description: Conversation history and state for agents, teams, and workflows.
+  - name: Memory
+    description: Persistent per-user memories.
+  - name: Knowledge
+    description: Knowledge base content used for retrieval.
+  - name: Evals
+    description: Evaluation runs for quality and reliability.
+paths:
+  /agents:
+    get:
+      operationId: listAgents
+      tags: [Agents]
+      summary: List all agents
+      description: Lists all agents configured on this AgentOS instance.
+      responses:
+        '200':
+          description: A list of agents.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      tags: [Agents]
+      summary: Get an agent
+      description: Retrieves configuration details for a single agent.
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      responses:
+        '200':
+          description: The agent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /agents/{agent_id}/runs:
+    post:
+      operationId: createAgentRun
+      tags: [Agents]
+      summary: Create an agent run
+      description: >-
+        Runs an agent with a message, either creating a new session or
+        continuing an existing one. Returns a single JSON result, or a
+        text/event-stream of incremental events when stream=true (the
+        AgentOS default).
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Run result (JSON) or SSE stream (text/event-stream).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+                description: 'Server-Sent Events, e.g. "event: RunContent" / "data: {...}"'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /runs/{run_id}/cancel:
+    post:
+      operationId: cancelRun
+      tags: [Agents]
+      summary: Cancel a run
+      description: Requests cancellation of an in-progress agent, team, or workflow run.
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cancellation acknowledged.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /teams:
+    get:
+      operationId: listTeams
+      tags: [Teams]
+      summary: List all teams
+      description: Retrieves a comprehensive list of all teams configured on this AgentOS instance.
+      responses:
+        '200':
+          description: A list of teams.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponse'
+  /teams/{team_id}/runs:
+    post:
+      operationId: createTeamRun
+      tags: [Teams]
+      summary: Create a team run
+      description: >-
+        Runs a team of agents against a message, with the same streaming,
+        session, and file-attachment semantics as an agent run.
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Run result (JSON) or SSE stream (text/event-stream).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /workflows:
+    get:
+      operationId: listWorkflows
+      tags: [Workflows]
+      summary: List all workflows
+      description: Lists all workflows configured on this AgentOS instance.
+      responses:
+        '200':
+          description: A list of workflows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowResponse'
+  /workflows/{workflow_id}:
+    get:
+      operationId: getWorkflowDetails
+      tags: [Workflows]
+      summary: Get workflow details
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The workflow definition.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResponse'
+  /workflows/{workflow_id}/runs:
+    post:
+      operationId: executeWorkflow
+      tags: [Workflows]
+      summary: Execute a workflow
+      description: >-
+        Executes a multi-step workflow. Streaming mode (stream=true, the
+        default) returns text/event-stream events such as "event:
+        RunStarted"; non-streaming mode returns the complete result as JSON.
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+      responses:
+        '200':
+          description: Run result (JSON) or SSE stream (text/event-stream).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+            text/event-stream:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          description: Execution failure.
+  /workflows/{workflow_id}/runs/{run_id}:
+    get:
+      operationId: getWorkflowRun
+      tags: [Workflows]
+      summary: Get a workflow run
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The workflow run.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunResponse'
+    delete:
+      operationId: cancelWorkflowRun
+      tags: [Workflows]
+      summary: Cancel a workflow run
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cancellation acknowledged.
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [Sessions]
+      summary: List sessions
+      description: Lists agent, team, or workflow sessions with filtering and pagination.
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [agent, team, workflow]
+            default: agent
+        - name: component_id
+          in: query
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          schema:
+            type: string
+        - name: session_name
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            default: created_at
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: A page of sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+    post:
+      operationId: createSession
+      tags: [Sessions]
+      summary: Create a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionInput'
+      responses:
+        '200':
+          description: The created session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /sessions/{session_id}:
+    get:
+      operationId: getSessionById
+      tags: [Sessions]
+      summary: Get a session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+    delete:
+      operationId: deleteSession
+      tags: [Sessions]
+      summary: Delete a session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deletion acknowledged.
+  /sessions/{session_id}/runs:
+    get:
+      operationId: getSessionRuns
+      tags: [Sessions]
+      summary: List runs in a session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Runs belonging to the session.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RunResponse'
+  /memories:
+    get:
+      operationId: listMemories
+      tags: [Memory]
+      summary: List memories
+      responses:
+        '200':
+          description: A list of stored memories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Memory'
+    post:
+      operationId: createMemory
+      tags: [Memory]
+      summary: Create a memory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryInput'
+      responses:
+        '200':
+          description: The created memory.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+  /memories/topics:
+    get:
+      operationId: getMemoryTopics
+      tags: [Memory]
+      summary: List memory topics
+      responses:
+        '200':
+          description: Distinct topics/tags used across stored memories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /memories/stats:
+    get:
+      operationId: getUserMemoryStatistics
+      tags: [Memory]
+      summary: Get user memory statistics
+      responses:
+        '200':
+          description: Aggregate memory counts and usage per user.
+          content:
+            application/json:
+              schema:
+                type: object
+  /memories/optimize:
+    post:
+      operationId: optimizeUserMemories
+      tags: [Memory]
+      summary: Optimize user memories
+      description: Consolidates and deduplicates a user's stored memories.
+      responses:
+        '200':
+          description: Optimization result.
+          content:
+            application/json:
+              schema:
+                type: object
+  /knowledge/content:
+    get:
+      operationId: listContent
+      tags: [Knowledge]
+      summary: List knowledge content
+      description: Paginated list of all content in the knowledge base with filtering and sorting.
+      parameters:
+        - name: db_id
+          in: query
+          schema:
+            type: string
+        - name: knowledge_id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A page of knowledge content.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentResponse'
+    post:
+      operationId: uploadContent
+      tags: [Knowledge]
+      summary: Upload knowledge content
+      description: Uploads a file, URL, or raw text into the knowledge base for chunking and indexing.
+      parameters:
+        - name: db_id
+          in: query
+          schema:
+            type: string
+        - name: knowledge_id
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ContentInput'
+      responses:
+        '202':
+          description: Content accepted for processing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentResponse'
+  /knowledge/search:
+    get:
+      operationId: searchKnowledge
+      tags: [Knowledge]
+      summary: Search knowledge content
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matching knowledge chunks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /eval-runs:
+    get:
+      operationId: listEvaluationRuns
+      tags: [Evals]
+      summary: List evaluation runs
+      responses:
+        '200':
+          description: A list of evaluation runs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EvalRun'
+    post:
+      operationId: executeEvaluation
+      tags: [Evals]
+      summary: Execute an evaluation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvalRunInput'
+      responses:
+        '200':
+          description: The created evaluation run.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvalRun'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        HTTP Bearer token equal to OS_SECURITY_KEY. Required only when a
+        Security Key is configured on the AgentOS instance; disabled
+        otherwise.
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: Invalid input or configuration.
+    Unauthorized:
+      description: Missing or invalid bearer token.
+    NotFound:
+      description: Resource not found.
+    ValidationError:
+      description: Request failed schema validation.
+  schemas:
+    RunRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        stream:
+          type: boolean
+          default: true
+        session_id:
+          type: string
+        user_id:
+          type: string
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+        version:
+          type: integer
+        background:
+          type: boolean
+          default: false
+        monitor:
+          type: boolean
+          default: true
+    RunResponse:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        content:
+          type: string
+        status:
+          type: string
+    AgentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        db_id:
+          type: string
+        description:
+          type: string
+        role:
+          type: string
+        model:
+          type: object
+        tools:
+          type: array
+          items:
+            type: object
+    TeamResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            type: string
+    WorkflowResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        steps:
+          type: array
+          items:
+            type: object
+    SessionInput:
+      type: object
+      properties:
+        session_name:
+          type: string
+        component_id:
+          type: string
+        user_id:
+          type: string
+    Session:
+      type: object
+      properties:
+        session_id:
+          type: string
+        session_name:
+          type: string
+        session_state:
+          type: object
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    SessionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        meta:
+          type: object
+          properties:
+            page:
+              type: integer
+            limit:
+              type: integer
+            total_pages:
+              type: integer
+            total_count:
+              type: integer
+    MemoryInput:
+      type: object
+      required:
+        - memory
+      properties:
+        memory:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        user_id:
+          type: string
+        topics:
+          type: array
+          items:
+            type: string
+    Memory:
+      type: object
+      properties:
+        memory_id:
+          type: string
+        memory:
+          type: string
+        user_id:
+          type: string
+        topics:
+          type: array
+          items:
+            type: string
+    ContentInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        file:
+          type: string
+          format: binary
+        text_content:
+          type: string
+        metadata:
+          type: string
+        reader_id:
+          type: string
+        chunker:
+          type: string
+        chunk_size:
+          type: integer
+        chunk_overlap:
+          type: integer
+    ContentResponse:
+      type: object
+      properties:
+        content_id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+    EvalRunInput:
+      type: object
+      required:
+        - eval_type
+        - input
+      properties:
+        eval_type:
+          type: string
+          enum: [accuracy, agent_as_judge, performance, reliability]
+        input:
+          type: string
+          minLength: 1
+        agent_id:
+          type: string
+        team_id:
+          type: string
+        model_id:
+          type: string
+        model_provider:
+          type: string
+        expected_output:
+          type: string
+        criteria:
+          type: string
+        expected_tool_calls:
+          type: array
+          items:
+            type: string
+        scoring_strategy:
+          type: string
+          enum: [numeric, binary]
+          default: binary
+        threshold:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 7
+        num_iterations:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 1
+        warmup_runs:
+          type: integer
+          minimum: 0
+          maximum: 10
+          default: 0
+        name:
+          type: string
+    EvalRun:
+      type: object
+      properties:
+        eval_run_id:
+          type: string
+        eval_type:
+          type: string
+        status:
+          type: string
+        score:
+          type: number
