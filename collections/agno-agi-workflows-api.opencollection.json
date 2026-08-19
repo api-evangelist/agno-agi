@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents Workflows API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/workflows"
+          },
+          "docs": "Lists all workflows configured on this AgentOS instance."
+        },
+        {
+          "info": {
+            "name": "Get workflow details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/workflows/:workflow_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get workflow details"
+        },
+        {
+          "info": {
+            "name": "Execute a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Executes a multi-step workflow. Streaming mode (stream=true, the default) returns text/event-stream events such as \"event: RunStarted\"; non-streaming mode returns the complete result as JSON."
+        },
+        {
+          "info": {
+            "name": "Get a workflow run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs/:run_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a workflow run"
+        },
+        {
+          "info": {
+            "name": "Cancel a workflow run",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "http://localhost:7777/workflows/:workflow_id/runs/:run_id",
+            "params": [
+              {
+                "name": "workflow_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel a workflow run"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

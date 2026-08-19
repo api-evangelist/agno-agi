@@ -1,0 +1,1053 @@
+{
+  "item": [
+    {
+      "id": "0058c171-512e-40e9-b534-3df81055f8e3",
+      "name": "Agents",
+      "description": {
+        "content": "Run and manage individual agents.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2597905b-e104-4817-a8f1-1cbfc77a0c50",
+          "name": "List all agents",
+          "request": {
+            "name": "List all agents",
+            "description": {
+              "content": "Lists all agents configured on this AgentOS instance.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5e6c6d82-b222-4bea-a2d2-237c0e93a94f",
+              "name": "A list of agents.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"db_id\": \"string\",\n    \"description\": \"string\",\n    \"role\": \"string\",\n    \"model\": {}\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"db_id\": \"string\",\n    \"description\": \"string\",\n    \"role\": \"string\",\n    \"model\": {}\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a954f71f-c5c7-4011-8f1b-8525bef36bfb",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1d1c2648-4ef6-46f8-bcff-b59d69cbe150",
+          "name": "Get an agent",
+          "request": {
+            "name": "Get an agent",
+            "description": {
+              "content": "Retrieves configuration details for a single agent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":agent_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "176d096c-4d8c-4ebd-917a-ee84570557cc",
+              "name": "The agent.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"db_id\": \"string\",\n  \"description\": \"string\",\n  \"role\": \"string\",\n  \"model\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "22efaab5-46f1-4ea6-827a-c4b7251eff78",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b9921e6a-0d0e-4735-a85f-caa3004ebbb8",
+          "name": "Create an agent run",
+          "request": {
+            "name": "Create an agent run",
+            "description": {
+              "content": "Runs an agent with a message, either creating a new session or continuing an existing one. Returns a single JSON result, or a text/event-stream of incremental events when stream=true (the AgentOS default).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":agent_id",
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "message",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "stream",
+                  "value": "true"
+                },
+                {
+                  "disabled": false,
+                  "key": "session_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "files",
+                  "value": "<binary>"
+                },
+                {
+                  "disabled": false,
+                  "key": "files",
+                  "value": "<binary>"
+                },
+                {
+                  "disabled": false,
+                  "key": "version",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "background",
+                  "value": "false"
+                },
+                {
+                  "disabled": false,
+                  "key": "monitor",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b5781dc6-13b6-436c-8c38-ff3094e47358",
+              "name": "Run result (JSON) or SSE stream (text/event-stream).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "message",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "stream",
+                      "value": "true"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "session_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "version",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "background",
+                      "value": "false"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "monitor",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"run_id\": \"string\",\n  \"session_id\": \"string\",\n  \"content\": \"string\",\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2d0b33a4-49dc-477a-a44b-222dc1b22408",
+              "name": "Invalid input or configuration.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "message",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "stream",
+                      "value": "true"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "session_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "version",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "background",
+                      "value": "false"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "monitor",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ec26e2bd-35c1-4af9-9237-11109853e5b7",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "message",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "stream",
+                      "value": "true"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "session_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "version",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "background",
+                      "value": "false"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "monitor",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ce1ea803-30da-43d8-8f1d-a16920361142",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "message",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "stream",
+                      "value": "true"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "session_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "version",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "background",
+                      "value": "false"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "monitor",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9c2b6e4e-b375-4002-8049-b3a7503286b2",
+              "name": "Request failed schema validation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":agent_id",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "message",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "stream",
+                      "value": "true"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "session_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "user_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "files",
+                      "value": "<binary>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "version",
+                      "value": "<integer>"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "background",
+                      "value": "false"
+                    },
+                    {
+                      "disabled": false,
+                      "key": "monitor",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3758517d-fbd5-4846-9bbc-943b23fa9461",
+          "name": "Cancel a run",
+          "request": {
+            "name": "Cancel a run",
+            "description": {
+              "content": "Requests cancellation of an in-progress agent, team, or workflow run.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "runs",
+                ":run_id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "run_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d1448f1a-b7b8-409f-ab5b-72006c1c8a71",
+              "name": "Cancellation acknowledged.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "runs",
+                    ":run_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "88ff0773-fd3f-4e7b-8bbc-5fd0eb5fb91d",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "runs",
+                    ":run_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "run_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "http://localhost:7777",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f74fc83f-d11d-47ec-972a-4123cb0f29a9",
+    "name": "Agno AgentOS Agents API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "AgentOS is Agno's self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an \"Authorization: Bearer <token>\" header; otherwise authentication is disabled. This document models the endpoints described in Agno's public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno's own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.\n\nContact Support:\n Name: Agno",
+      "type": "text/plain"
+    }
+  }
+}

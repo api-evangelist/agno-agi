@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/agents"
+          },
+          "docs": "Lists all agents configured on this AgentOS instance."
+        },
+        {
+          "info": {
+            "name": "Get an agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/agents/:agent_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieves configuration details for a single agent."
+        },
+        {
+          "info": {
+            "name": "Create an agent run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/agents/:agent_id/runs",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            }
+          },
+          "docs": "Runs an agent with a message, either creating a new session or continuing an existing one. Returns a single JSON result, or a text/event-stream of incremental events when stream=true (the AgentOS default)."
+        },
+        {
+          "info": {
+            "name": "Cancel a run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/runs/:run_id/cancel",
+            "params": [
+              {
+                "name": "run_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Requests cancellation of an in-progress agent, team, or workflow run."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

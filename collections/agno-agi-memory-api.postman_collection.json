@@ -1,0 +1,446 @@
+{
+  "item": [
+    {
+      "id": "0702b692-d8e2-4ae0-a440-2bc7e1f4e84e",
+      "name": "Memory",
+      "description": {
+        "content": "Persistent per-user memories.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f40e64bb-22c4-4da6-ba08-d2a489affcc7",
+          "name": "List memories",
+          "request": {
+            "name": "List memories",
+            "description": {},
+            "url": {
+              "path": [
+                "memories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e8997533-d272-4703-bdcd-5bd28f8a3b91",
+              "name": "A list of stored memories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "memories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"memory_id\": \"string\",\n    \"memory\": \"string\",\n    \"user_id\": \"string\",\n    \"topics\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  {\n    \"memory_id\": \"string\",\n    \"memory\": \"string\",\n    \"user_id\": \"string\",\n    \"topics\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "45e7dd02-7e2f-450d-af40-1c7a8ae794ea",
+          "name": "Create a memory",
+          "request": {
+            "name": "Create a memory",
+            "description": {},
+            "url": {
+              "path": [
+                "memories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"memory\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"topics\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4197cf36-00eb-4b36-b7ee-a7060ae3614c",
+              "name": "The created memory.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "memories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"memory\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"topics\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"memory_id\": \"string\",\n  \"memory\": \"string\",\n  \"user_id\": \"string\",\n  \"topics\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8243fd28-3f44-49b2-b82b-6ff5dbbc400c",
+          "name": "List memory topics",
+          "request": {
+            "name": "List memory topics",
+            "description": {},
+            "url": {
+              "path": [
+                "memories",
+                "topics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "295e632b-578d-4d3a-b1dc-298c8e55570c",
+              "name": "Distinct topics/tags used across stored memories.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "memories",
+                    "topics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"string\",\n  \"string\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f719cdd1-0527-468c-81ff-b6e36edff40a",
+          "name": "Get user memory statistics",
+          "request": {
+            "name": "Get user memory statistics",
+            "description": {},
+            "url": {
+              "path": [
+                "memories",
+                "stats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "837c9b1d-692f-474d-8592-5118c8767749",
+              "name": "Aggregate memory counts and usage per user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "memories",
+                    "stats"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "091af5c4-f2db-4398-bcf6-3239880e8a48",
+          "name": "Optimize user memories",
+          "request": {
+            "name": "Optimize user memories",
+            "description": {
+              "content": "Consolidates and deduplicates a user's stored memories.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "memories",
+                "optimize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f37af296-7067-4fd5-8e50-3a8f1d591d48",
+              "name": "Optimization result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "memories",
+                    "optimize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "http://localhost:7777",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "809f3204-2f21-4279-9510-b25d07270ae8",
+    "name": "Agno AgentOS Agents Memory API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "AgentOS is Agno's self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an \"Authorization: Bearer <token>\" header; otherwise authentication is disabled. This document models the endpoints described in Agno's public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno's own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.\n\nContact Support:\n Name: Agno",
+      "type": "text/plain"
+    }
+  }
+}

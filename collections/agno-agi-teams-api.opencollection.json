@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents Teams API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Teams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all teams",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/teams"
+          },
+          "docs": "Retrieves a comprehensive list of all teams configured on this AgentOS instance."
+        },
+        {
+          "info": {
+            "name": "Create a team run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/teams/:team_id/runs",
+            "params": [
+              {
+                "name": "team_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Runs a team of agents against a message, with the same streaming, session, and file-attachment semantics as an agent run."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

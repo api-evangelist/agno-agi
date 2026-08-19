@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents Memory API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Memory",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List memories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/memories"
+          },
+          "docs": "List memories"
+        },
+        {
+          "info": {
+            "name": "Create a memory",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/memories",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a memory"
+        },
+        {
+          "info": {
+            "name": "List memory topics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/memories/topics"
+          },
+          "docs": "List memory topics"
+        },
+        {
+          "info": {
+            "name": "Get user memory statistics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/memories/stats"
+          },
+          "docs": "Get user memory statistics"
+        },
+        {
+          "info": {
+            "name": "Optimize user memories",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/memories/optimize"
+          },
+          "docs": "Consolidates and deduplicates a user's stored memories."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

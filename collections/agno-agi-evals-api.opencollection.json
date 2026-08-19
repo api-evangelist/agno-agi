@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents Evals API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Evals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List evaluation runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/eval-runs"
+          },
+          "docs": "List evaluation runs"
+        },
+        {
+          "info": {
+            "name": "Execute an evaluation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/eval-runs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute an evaluation"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

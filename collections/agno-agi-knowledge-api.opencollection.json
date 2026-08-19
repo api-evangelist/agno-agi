@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Agno AgentOS Agents Knowledge API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Knowledge",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List knowledge content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/knowledge/content",
+            "params": [
+              {
+                "name": "db_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "knowledge_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Paginated list of all content in the knowledge base with filtering and sorting."
+        },
+        {
+          "info": {
+            "name": "Upload knowledge content",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "http://localhost:7777/knowledge/content",
+            "params": [
+              {
+                "name": "db_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "knowledge_id",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": []
+            }
+          },
+          "docs": "Uploads a file, URL, or raw text into the knowledge base for chunking and indexing."
+        },
+        {
+          "info": {
+            "name": "Search knowledge content",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://localhost:7777/knowledge/search",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Search knowledge content"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,212 @@
+{
+  "item": [
+    {
+      "id": "89285c7f-20f7-4c38-9bef-f761b1eb9e5c",
+      "name": "Evals",
+      "description": {
+        "content": "Evaluation runs for quality and reliability.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "10b65d4b-004b-4952-b422-aa651b35f078",
+          "name": "List evaluation runs",
+          "request": {
+            "name": "List evaluation runs",
+            "description": {},
+            "url": {
+              "path": [
+                "eval-runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "185470f6-79b8-41ef-8b27-a1c64cfdb1aa",
+              "name": "A list of evaluation runs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "eval-runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"eval_run_id\": \"string\",\n    \"eval_type\": \"string\",\n    \"status\": \"string\",\n    \"score\": 9738.767704646303\n  },\n  {\n    \"eval_run_id\": \"string\",\n    \"eval_type\": \"string\",\n    \"status\": \"string\",\n    \"score\": 9498.279492572598\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fef4ce11-cef8-41f8-9603-c84cb2b6159e",
+          "name": "Execute an evaluation",
+          "request": {
+            "name": "Execute an evaluation",
+            "description": {},
+            "url": {
+              "path": [
+                "eval-runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eval_type\": \"<string>\",\n  \"input\": \"<string>\",\n  \"agent_id\": \"<string>\",\n  \"team_id\": \"<string>\",\n  \"model_id\": \"<string>\",\n  \"model_provider\": \"<string>\",\n  \"expected_output\": \"<string>\",\n  \"criteria\": \"<string>\",\n  \"expected_tool_calls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"scoring_strategy\": \"binary\",\n  \"threshold\": 7,\n  \"num_iterations\": 1,\n  \"warmup_runs\": 0,\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3bb681d3-acce-44c5-a52b-21885b5d2e1e",
+              "name": "The created evaluation run.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "eval-runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"eval_type\": \"<string>\",\n  \"input\": \"<string>\",\n  \"agent_id\": \"<string>\",\n  \"team_id\": \"<string>\",\n  \"model_id\": \"<string>\",\n  \"model_provider\": \"<string>\",\n  \"expected_output\": \"<string>\",\n  \"criteria\": \"<string>\",\n  \"expected_tool_calls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"scoring_strategy\": \"binary\",\n  \"threshold\": 7,\n  \"num_iterations\": 1,\n  \"warmup_runs\": 0,\n  \"name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"eval_run_id\": \"string\",\n  \"eval_type\": \"string\",\n  \"status\": \"string\",\n  \"score\": 248.0190248616565\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "http://localhost:7777",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "dbab4161-ce46-4411-9500-3c04287458af",
+    "name": "Agno AgentOS Agents Evals API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "AgentOS is Agno's self-hostable runtime and API server. It turns agents, teams, and workflows defined with the open-source Agno Python framework into a RESTful API exposing runs, sessions, memory, knowledge, and evals. There is no single Agno-operated multi-tenant base URL - every AgentOS instance runs on infrastructure you control, defaulting to http://localhost:7777 in local development. When a Security Key (OS_SECURITY_KEY) is configured, all routes require an \"Authorization: Bearer <token>\" header; otherwise authentication is disabled. This document models the endpoints described in Agno's public API reference (docs.agno.com/reference-api) plus the sibling endpoints named in Agno's own documentation index (docs.agno.com/llms.txt). Some request/response field names are reconstructed from that reference content rather than a downloaded machine-readable OpenAPI file, so treat schemas as representative rather than byte-exact.\n\nContact Support:\n Name: Agno",
+      "type": "text/plain"
+    }
+  }
+}
