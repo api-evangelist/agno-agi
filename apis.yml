@@ -24,6 +24,14 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/agno-agi.png
 tags:
+- Artificial Intelligence
+- Agents
+- Multi-Agent
+- LLM
+- Framework
+- Open-Source
+- Runtime
+tags_raw:
 - AI
 - Agents
 - Multi-Agent
@@ -221,6 +229,8 @@ apis:
   humanURL: https://docs.agno.com/agent-os/api
   baseURL: http://localhost:7777
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
