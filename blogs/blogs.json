@@ -3,12 +3,12 @@
   "feeds": [
     {
       "source": "https://agno.com/blog",
-      "feed_url": "https://agno.com/blog",
+      "feed_url": "https://www.agno.com/rss.xml",
       "title": "",
       "saved": 0,
-      "method": "none"
+      "method": "discovered"
     }
   ],
-  "fetched": "2026-08-15T12:22:01Z",
+  "fetched": "2026-08-22T20:20:02Z",
   "post_count": 6
 }
