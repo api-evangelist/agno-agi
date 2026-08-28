@@ -9,6 +9,18 @@ description: Agno (formerly Phidata) is an open-source Python framework for buil
   connects a browser directly to a self-hosted AgentOS instance for chat, tracing,
   and monitoring; Agno does not operate a separate multi-tenant inference API of
   its own.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
